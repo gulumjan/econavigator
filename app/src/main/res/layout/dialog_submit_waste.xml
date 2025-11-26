@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="♻️ Сдать отходы"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/text"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Что ты сдаёшь?"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <RadioGroup
+        android:id="@+id/rg_waste_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/rb_plastic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🗑️ Пластиковая бутылка (+10 баллов)"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_paper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📄 Макулатура (+20 баллов)"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_glass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🍶 Стеклянная бутылка (+15 баллов)"
+            android:textSize="16sp" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сдать"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary" />
+
+</LinearLayout>

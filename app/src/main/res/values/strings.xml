@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Эко-Навигатор</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Главная</string>
+    <string name="nav_map">Карта</string>
+    <string name="nav_game">Игры</string>
+    <string name="nav_leaderboard">Лидеры</string>
+    <string name="nav_profile">Профиль</string>
+
+    <!-- Home Screen -->
+    <string name="welcome_message">Привет, Эко-герой!</string>
+    <string name="your_points">Твои баллы</string>
+    <string name="active_missions">Активные миссии</string>
+    <string name="to_next_level">До следующего уровня</string>
+
+    <!-- Levels -->
+    <string name="level_1">🌱 Новичок</string>
+    <string name="level_2">🌿 Юный эколог</string>
+    <string name="level_3">🍀 Защитник природы</string>
+    <string name="level_4">🌳 Эко-воин</string>
+    <string name="level_5">⭐ Эко-герой</string>
+
+    <!-- Map Screen -->
+    <string name="school_name">ISIT Эрудит</string>
+    <string name="school_address">ул. 7 Апреля, 1/1, Бишкек</string>
+    <string name="near_technopark">рядом с ТЦ Технопарк</string>
+    <string name="recycle_points">Пункты сдачи</string>
+
+    <!-- Game Screen -->
+    <string name="mini_games">Мини-игры</string>
+    <string name="sorting_game">🗑️ Сортировка отходов</string>
+    <string name="sorting_game_desc">Перетаскивай мусор в нужные контейнеры!</string>
+    <string name="quiz_game">❓ Эко-викторина</string>
+    <string name="quiz_game_desc">Проверь свои знания об экологии!</string>
+    <string name="search_game">🔍 Найди мусор</string>
+    <string name="search_game_desc">Найди все спрятанные отходы на картинке!</string>
+    <string name="play">Играть</string>
+
+    <!-- Leaderboard Screen -->
+    <string name="leaderboard_title">🏆 Таблица лидеров</string>
+    <string name="my_class">Мой класс</string>
+    <string name="all_school">Вся школа</string>
+    <string name="teams">Команды</string>
+    <string name="points">баллов</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_title">Профиль</string>
+    <string name="achievements">🏅 Достижения</string>
+    <string name="statistics">Статистика</string>
+    <string name="history">История</string>
+    <string name="settings">Настройки</string>
+
+    <!-- Submit Waste Dialog -->
+    <string name="submit_waste">♻️ Сдать отходы</string>
+    <string name="what_submitting">Что ты сдаёшь?</string>
+    <string name="plastic_bottle">🗑️ Пластиковая бутылка (+10 баллов)</string>
+    <string name="paper">📄 Макулатура (+20 баллов)</string>
+    <string name="glass_bottle">🍶 Стеклянная бутылка (+15 баллов)</string>
+    <string name="submit">Сдать</string>
+    <string name="cancel">Отмена</string>
+
+    <!-- Achievements -->
+    <string name="achievement_first_step">Первый шаг</string>
+    <string name="achievement_first_step_desc">Первая сдача отходов</string>
+    <string name="achievement_novice">Эко-новичок</string>
+    <string name="achievement_novice_desc">10 сдач отходов</string>
+    <string name="achievement_pro">Эко-профи</string>
+    <string name="achievement_pro_desc">50 сдач отходов</string>
+    <string name="achievement_legend">Легенда</string>
+    <string name="achievement_legend_desc">100 сдач отходов</string>
+    <string name="achievement_team_player">Командный игрок</string>
+    <string name="achievement_team_player_desc">5 командных миссий</string>
+    <string name="achievement_week_best">Лучший недели</string>
+    <string name="achievement_week_best_desc">1 место в рейтинге</string>
+
+    <!-- Missions -->
+    <string name="mission_bottles">Сдай 5 бутылок за неделю</string>
+    <string name="mission_paper">Собери 3 кг макулатуры</string>
+    <string name="mission_teach">Научи друга сортировать мусор</string>
+    <string name="mission_cleanup">Очисти школьный двор</string>
+    <string name="mission_team">Недельная эко-победа класса</string>
+    <string name="completed">✅ Выполнено</string>
+    <string name="reward">Награда</string>
+
+    <!-- Messages -->
+    <string name="congrats">Поздравляем!</string>
+    <string name="level_up">Ты повысил уровень!</string>
+    <string name="points_earned">Получено баллов:</string>
+    <string name="mission_completed">Миссия выполнена!</string>
+    <string name="achievement_unlocked">Достижение разблокировано!</string>
+
+    <!-- Common -->
+    <string name="loading">Загрузка...</string>
+    <string name="error">Ошибка</string>
+    <string name="retry">Повторить</string>
+    <string name="ok">OK</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+</resources>

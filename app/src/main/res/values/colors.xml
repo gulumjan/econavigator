@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+    <color name="primary_light">#C8E6C9</color>
+
+    <!-- Accent Colors -->
+    <color name="accent">#03A9F4</color>
+    <color name="accent_dark">#0288D1</color>
+    <color name="accent_light">#B3E5FC</color>
+
+    <!-- Background -->
+    <color name="background">#E8F5E9</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text">#1B5E20</color>
+    <color name="text_secondary">#757575</color>
+
+    <!-- Special Colors -->
+    <color name="reward">#FFC107</color>
+    <color name="error">#F44336</color>
+    <color name="success">#4CAF50</color>
+
+    <!-- Waste Type Colors -->
+    <color name="plastic">#2196F3</color>
+    <color name="paper">#FF9800</color>
+    <color name="glass">#4CAF50</color>
+</resources>
