@@ -1,4 +1,4 @@
-package kg.econavigator.models;
+package com.example.econavigator.models;
 
 public class User {
     private int id;
