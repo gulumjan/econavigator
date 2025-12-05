@@ -1,24 +1,27 @@
 package com.example.econavigator.models;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import com.google.firebase.database.IgnoreExtraProperties;
 
-@Entity(tableName = "missions")
-public class Mission {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-    private String title;
-    private String description;
-    private int targetCount;
-    private int currentCount;
-    private int rewardPoints;
-    private boolean completed;
-    private String type; // daily, weekly, special
+@IgnoreExtraProperties
+public class FirebaseMission {
+    public String missionId;
+    public String studentUid;
+    public String title;
+    public String description;
+    public int targetCount;
+    public int currentCount;
+    public int rewardPoints;
+    public boolean completed;
+    public String type; // daily, weekly, special
+    public long createdDate;
+    public long completedDate;
 
-    public Mission() {}
+    public FirebaseMission() {}
 
-    public Mission(int id, String title, String description, int targetCount, int rewardPoints, String type) {
-        this.id = id;
+    public FirebaseMission(String missionId, String studentUid, String title,
+                           String description, int targetCount, int rewardPoints, String type) {
+        this.missionId = missionId;
+        this.studentUid = studentUid;
         this.title = title;
         this.description = description;
         this.targetCount = targetCount;
@@ -26,11 +29,15 @@ public class Mission {
         this.rewardPoints = rewardPoints;
         this.completed = false;
         this.type = type;
+        this.createdDate = System.currentTimeMillis();
     }
 
     // Getters and Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public String getMissionId() { return missionId; }
+    public void setMissionId(String missionId) { this.missionId = missionId; }
+
+    public String getStudentUid() { return studentUid; }
+    public void setStudentUid(String studentUid) { this.studentUid = studentUid; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -53,17 +60,25 @@ public class Mission {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
+    public long getCreatedDate() { return createdDate; }
+    public void setCreatedDate(long createdDate) { this.createdDate = createdDate; }
+
+    public long getCompletedDate() { return completedDate; }
+    public void setCompletedDate(long completedDate) { this.completedDate = completedDate; }
+
     // Helper methods
     public void incrementProgress() {
         if (!completed && currentCount < targetCount) {
             currentCount++;
             if (currentCount >= targetCount) {
                 completed = true;
+                completedDate = System.currentTimeMillis();
             }
         }
     }
 
     public int getProgressPercentage() {
+        if (targetCount == 0) return 0;
         return (int) ((float) currentCount / targetCount * 100);
     }
 }

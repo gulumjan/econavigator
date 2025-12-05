@@ -8,16 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.econavigator.R;
-import com.example.econavigator.models.Student;
+import com.example.econavigator.models.FirebaseStudent;
 
 import java.util.List;
 
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
 
     private Context context;
-    private List<Student> studentList;
+    private List<FirebaseStudent> studentList;
 
-    public LeaderboardAdapter(Context context, List<Student> studentList) {
+    public LeaderboardAdapter(Context context, List<FirebaseStudent> studentList) {
         this.context = context;
         this.studentList = studentList;
     }
@@ -31,7 +31,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Student student = studentList.get(position);
+        FirebaseStudent student = studentList.get(position);
 
         holder.tvPosition.setText(String.valueOf(position + 1));
         holder.tvName.setText(student.getName());

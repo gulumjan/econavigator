@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.econavigator.R;
 import com.example.econavigator.adapters.LeaderboardAdapter;
-import com.example.econavigator.models.Student;
+import com.example.econavigator.models.FirebaseStudent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class LeaderboardFragment extends Fragment {
 
     private RecyclerView rvLeaderboard;
     private LeaderboardAdapter adapter;
-    private List<Student> studentList;
+    private List<FirebaseStudent> studentList;
 
     @Nullable
     @Override
@@ -45,12 +45,26 @@ public class LeaderboardFragment extends Fragment {
 
     private void loadLeaderboardData() {
         // TODO: Load from database
-        // Demo data
-        studentList.add(new Student(1, "Айдан", "5А", 850, 4));
-        studentList.add(new Student(2, "Нурай", "5А", 720, 4));
-        studentList.add(new Student(3, "Бекзат", "5Б", 650, 4));
-        studentList.add(new Student(4, "Айгуль", "5А", 580, 3));
-        studentList.add(new Student(5, "Эрлан", "5В", 490, 3));
+        // Demo data - ИСПРАВЛЕНО: используем правильный конструктор
+        studentList.add(new FirebaseStudent("uid1", "student1@example.com", "Айдан", "5А", "student"));
+        studentList.get(0).setPoints(850);
+        studentList.get(0).setLevel(4);
+
+        studentList.add(new FirebaseStudent("uid2", "student2@example.com", "Нурай", "5А", "student"));
+        studentList.get(1).setPoints(720);
+        studentList.get(1).setLevel(4);
+
+        studentList.add(new FirebaseStudent("uid3", "student3@example.com", "Бекзат", "5Б", "student"));
+        studentList.get(2).setPoints(650);
+        studentList.get(2).setLevel(4);
+
+        studentList.add(new FirebaseStudent("uid4", "student4@example.com", "Айгуль", "5А", "student"));
+        studentList.get(3).setPoints(580);
+        studentList.get(3).setLevel(3);
+
+        studentList.add(new FirebaseStudent("uid5", "student5@example.com", "Эрлан", "5В", "student"));
+        studentList.get(4).setPoints(490);
+        studentList.get(4).setLevel(3);
 
         adapter.notifyDataSetChanged();
     }

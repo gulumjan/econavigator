@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.econavigator.R;
 import com.example.econavigator.adapters.AchievementAdapter;
-import com.example.econavigator.models.Achievement;
+import com.example.econavigator.models.FirebaseAchievement;
 import com.example.econavigator.utils.SharedPrefsManager;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvProfileName, tvProfileClass, tvProfileLevel, tvProfilePoints;
     private RecyclerView rvAchievements;
     private AchievementAdapter adapter;
-    private List<Achievement> achievementList;
+    private List<FirebaseAchievement> achievementList;
     private SharedPrefsManager prefsManager;
 
     @Nullable
@@ -67,11 +67,16 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadAchievements() {
-        // TODO: Load from database
-        // Demo data
-        achievementList.add(new Achievement(1, "Первый шаг", "Первая сдача отходов", R.drawable.ic_bottle));
-        achievementList.add(new Achievement(2, "Эко-новичок", "10 сдач отходов", R.drawable.ic_paper));
-        achievementList.add(new Achievement(3, "Эко-профи", "50 сдач отходов", R.drawable.ic_plastic));
+        // TODO: Load from Firebase
+        // Demo data - ИСПРАВЛЕНО
+        String uid = prefsManager.getFirebaseUid();
+
+        achievementList.add(new FirebaseAchievement("ach1", uid, "Первый шаг",
+                "Первая сдача отходов", "ic_bottle"));
+        achievementList.add(new FirebaseAchievement("ach2", uid, "Эко-новичок",
+                "10 сдач отходов", "ic_paper"));
+        achievementList.add(new FirebaseAchievement("ach3", uid, "Эко-профи",
+                "50 сдач отходов", "ic_plastic"));
 
         adapter.notifyDataSetChanged();
     }

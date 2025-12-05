@@ -88,4 +88,26 @@ public class PointsCalculator {
 
         return (int) (((float) pointsInLevel / pointsNeeded) * 100);
     }
+
+    /**
+     * Рассчитать баллы за игру "Сортировка"
+     */
+    public static int calculateSortingGamePoints(int level, int correctSorts) {
+        return level * Constants.SORTING_GAME_POINTS_PER_LEVEL +
+                (correctSorts * 2);
+    }
+
+    /**
+     * Рассчитать баллы за игру "Викторина"
+     */
+    public static int calculateQuizGamePoints(int correctAnswers) {
+        return correctAnswers * Constants.QUIZ_GAME_POINTS_PER_QUESTION;
+    }
+
+    /**
+     * Рассчитать баллы за игру "Поиск мусора"
+     */
+    public static int calculateSearchGamePoints(int foundItems, int timeBonus) {
+        return (foundItems * Constants.SEARCH_GAME_POINTS_PER_ITEM) + timeBonus;
+    }
 }
