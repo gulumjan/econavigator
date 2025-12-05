@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Стеклянная бутылка -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M9,2 L9,5 L7,5 L7,9 L6,9 L6,22 L18,22 L18,9 L17,9 L17,5 L15,5 L15,2 Z M10,3 L14,3 L14,5 L10,5 Z M8,6 L16,6 L16,8 L8,8 Z M7,10 L17,10 L17,21 L7,21 Z"/>
+
+    <!-- Блик на стекле -->
+    <path
+        android:fillColor="#80FFFFFF"
+        android:pathData="M8,11 L9,11 L9,18 L8,18 Z"/>
+
+    <!-- Горлышко бутылки -->
+    <path
+        android:fillColor="#66BB6A"
+        android:pathData="M10,3 L14,3 L14,5 L10,5 Z"/>
+</vector>

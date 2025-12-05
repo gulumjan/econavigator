@@ -9,16 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.econavigator.R;
-import com.example.econavigator.models.Mission;
+import com.example.econavigator.models.FirebaseMission;
 
 import java.util.List;
 
 public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> {
 
     private Context context;
-    private List<Mission> missionList;
+    private List<FirebaseMission> missionList;
 
-    public MissionAdapter(Context context, List<Mission> missionList) {
+    public MissionAdapter(Context context, List<FirebaseMission> missionList) {
         this.context = context;
         this.missionList = missionList;
     }
@@ -32,7 +32,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Mission mission = missionList.get(position);
+        FirebaseMission mission = missionList.get(position);
 
         holder.tvTitle.setText(mission.getTitle());
         holder.tvDescription.setText(mission.getDescription());

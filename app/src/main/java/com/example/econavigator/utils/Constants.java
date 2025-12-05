@@ -44,6 +44,11 @@ public class Constants {
     public static final String KEY_FIRST_LAUNCH = "first_launch";
     public static final String KEY_LAST_LOGIN_DATE = "last_login_date";
 
+    // Firebase keys (НОВОЕ)
+    public static final String KEY_FIREBASE_UID = "firebase_uid";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_ROLE = "role";
+
     // Animation durations
     public static final int ANIMATION_DURATION_SHORT = 300;
     public static final int ANIMATION_DURATION_MEDIUM = 500;
@@ -52,4 +57,24 @@ public class Constants {
     // Map settings
     public static final float DEFAULT_ZOOM = 15f;
     public static final int MAP_PADDING = 100;
+
+    // Game settings (НОВОЕ)
+    public static final int SORTING_GAME_POINTS_PER_LEVEL = 10;
+    public static final int QUIZ_GAME_POINTS_PER_QUESTION = 10;
+    public static final int SEARCH_GAME_POINTS_PER_ITEM = 10;
+
+    // Achievement IDs (НОВОЕ)
+    public static final String ACH_FIRST_STEP = "ach_first_step";
+    public static final String ACH_NOVICE = "ach_novice";
+    public static final String ACH_PRO = "ach_pro";
+    public static final String ACH_LEGEND = "ach_legend";
+    public static final String ACH_TEAM_PLAYER = "ach_team_player";
+    public static final String ACH_WEEK_BEST = "ach_week_best";
+
+    // Mission IDs (НОВОЕ)
+    public static final String MIS_BOTTLES_5 = "mis_bottles_5";
+    public static final String MIS_PAPER_3KG = "mis_paper_3kg";
+    public static final String MIS_TEACH_FRIEND = "mis_teach_friend";
+    public static final String MIS_CLEANUP = "mis_cleanup";
+    public static final String MIS_TEAM_WEEK = "mis_team_week";
 }

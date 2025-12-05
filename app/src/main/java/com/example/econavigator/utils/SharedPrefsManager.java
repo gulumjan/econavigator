@@ -15,7 +15,8 @@ public class SharedPrefsManager {
         editor = sharedPreferences.edit();
     }
 
-    // Student data
+    // ==================== STUDENT DATA ====================
+
     public void saveStudentData(int id, String name, String className, int points, int level) {
         editor.putInt(Constants.KEY_STUDENT_ID, id);
         editor.putString(Constants.KEY_STUDENT_NAME, name);
@@ -55,7 +56,69 @@ public class SharedPrefsManager {
         editor.apply();
     }
 
-    // First launch
+    // ==================== FIREBASE DATA (НОВОЕ) ====================
+
+    /**
+     * Сохранить Firebase UID
+     */
+    public void saveFirebaseUid(String uid) {
+        editor.putString(Constants.KEY_FIREBASE_UID, uid);
+        editor.apply();
+    }
+
+    /**
+     * Получить Firebase UID
+     */
+    public String getFirebaseUid() {
+        return sharedPreferences.getString(Constants.KEY_FIREBASE_UID, "");
+    }
+
+    /**
+     * Сохранить email
+     */
+    public void saveEmail(String email) {
+        editor.putString(Constants.KEY_EMAIL, email);
+        editor.apply();
+    }
+
+    /**
+     * Получить email
+     */
+    public String getEmail() {
+        return sharedPreferences.getString(Constants.KEY_EMAIL, "");
+    }
+
+    /**
+     * Сохранить роль (student или admin)
+     */
+    public void saveRole(String role) {
+        editor.putString(Constants.KEY_ROLE, role);
+        editor.apply();
+    }
+
+    /**
+     * Получить роль
+     */
+    public String getRole() {
+        return sharedPreferences.getString(Constants.KEY_ROLE, "student");
+    }
+
+    /**
+     * Проверить, является ли пользователь админом
+     */
+    public boolean isAdmin() {
+        return "admin".equals(getRole());
+    }
+
+    /**
+     * Проверить, авторизован ли пользователь
+     */
+    public boolean isLoggedIn() {
+        return !getFirebaseUid().isEmpty();
+    }
+
+    // ==================== FIRST LAUNCH ====================
+
     public boolean isFirstLaunch() {
         return sharedPreferences.getBoolean(Constants.KEY_FIRST_LAUNCH, true);
     }
@@ -65,7 +128,8 @@ public class SharedPrefsManager {
         editor.apply();
     }
 
-    // Last login
+    // ==================== LAST LOGIN ====================
+
     public void saveLastLoginDate() {
         editor.putLong(Constants.KEY_LAST_LOGIN_DATE, System.currentTimeMillis());
         editor.apply();
@@ -75,9 +139,27 @@ public class SharedPrefsManager {
         return sharedPreferences.getLong(Constants.KEY_LAST_LOGIN_DATE, 0);
     }
 
-    // Clear all data
+    // ==================== CLEAR DATA ====================
+
+    /**
+     * Очистить все данные
+     */
     public void clearAll() {
         editor.clear();
+        editor.apply();
+    }
+
+    /**
+     * Очистить только данные пользователя (для выхода)
+     */
+    public void clearUserData() {
+        editor.remove(Constants.KEY_FIREBASE_UID);
+        editor.remove(Constants.KEY_EMAIL);
+        editor.remove(Constants.KEY_ROLE);
+        editor.remove(Constants.KEY_STUDENT_NAME);
+        editor.remove(Constants.KEY_STUDENT_CLASS);
+        editor.remove(Constants.KEY_STUDENT_POINTS);
+        editor.remove(Constants.KEY_STUDENT_LEVEL);
         editor.apply();
     }
 }

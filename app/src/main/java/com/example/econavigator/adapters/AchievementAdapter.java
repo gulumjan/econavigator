@@ -1,7 +1,6 @@
 package com.example.econavigator.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.econavigator.R;
-import com.example.econavigator.models.Achievement;
+import com.example.econavigator.models.FirebaseAchievement;
 
 import java.util.List;
 
 public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.ViewHolder> {
 
     private Context context;
-    private List<Achievement> achievementList;
+    private List<FirebaseAchievement> achievementList;
 
-    public AchievementAdapter(Context context, List<Achievement> achievementList) {
+    public AchievementAdapter(Context context, List<FirebaseAchievement> achievementList) {
         this.context = context;
         this.achievementList = achievementList;
     }
@@ -33,10 +32,13 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Achievement achievement = achievementList.get(position);
+        FirebaseAchievement achievement = achievementList.get(position);
 
         holder.tvTitle.setText(achievement.getTitle());
-        holder.ivIcon.setImageResource(achievement.getIconResource());
+
+        // Получаем ресурс иконки
+        int iconResource = getIconResource(achievement.getIconName());
+        holder.ivIcon.setImageResource(iconResource);
 
         if (achievement.isUnlocked()) {
             holder.itemView.setAlpha(1.0f);
@@ -48,6 +50,26 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
     @Override
     public int getItemCount() {
         return achievementList.size();
+    }
+
+    // Метод для получения ресурса иконки по имени
+    private int getIconResource(String iconName) {
+        if (iconName == null) {
+            return R.drawable.ic_bottle; // default icon
+        }
+
+        switch (iconName) {
+            case "ic_bottle":
+                return R.drawable.ic_bottle;
+            case "ic_paper":
+                return R.drawable.ic_paper;
+            case "ic_plastic":
+                return R.drawable.ic_plastic;
+            case "ic_glass":
+                return R.drawable.ic_glass;
+            default:
+                return R.drawable.ic_bottle;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
