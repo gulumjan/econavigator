@@ -49,6 +49,13 @@ public class HomeFragment extends Fragment {
         rvMissions.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Обновляем данные при возврате на экран (после игр)
+        loadStudentData();
+    }
+
     private void loadStudentData() {
         String name = prefsManager.getStudentName();
         int points = prefsManager.getStudentPoints();
@@ -66,9 +73,15 @@ public class HomeFragment extends Fragment {
         // Calculate progress to next level
         int currentLevelThreshold = getLevelThreshold(level);
         int nextLevelThreshold = getLevelThreshold(level + 1);
-        int progress = (int) (((float) (points - currentLevelThreshold) /
-                (nextLevelThreshold - currentLevelThreshold)) * 100);
-        progressLevel.setProgress(Math.max(0, Math.min(100, progress)));
+
+        if (level >= 5) {
+            // Максимальный уровень достигнут
+            progressLevel.setProgress(100);
+        } else {
+            int progress = (int) (((float) (points - currentLevelThreshold) /
+                    (nextLevelThreshold - currentLevelThreshold)) * 100);
+            progressLevel.setProgress(Math.max(0, Math.min(100, progress)));
+        }
     }
 
     private String getLevelName(int level) {
