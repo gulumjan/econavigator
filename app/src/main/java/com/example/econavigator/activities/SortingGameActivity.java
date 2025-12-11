@@ -8,13 +8,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.econavigator.R;
 import com.example.econavigator.models.TrashItem;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,9 +26,6 @@ public class SortingGameActivity extends AppCompatActivity {
     private int score = 0;
     private int level = 1;
     private int correctSorts = 0;
-    private int levelStartScore = 0; // очки в начале уровня
-
-    private final int MAX_LEVEL = 8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +35,7 @@ public class SortingGameActivity extends AppCompatActivity {
         initViews();
         initTrashItems();
         setupDragAndDrop();
-        startLevel();
+        displayTrashItems();
     }
 
     private void initViews() {
@@ -53,9 +47,6 @@ public class SortingGameActivity extends AppCompatActivity {
         binGlass = findViewById(R.id.bin_glass);
         binMetal = findViewById(R.id.bin_metal);
         binOrganic = findViewById(R.id.bin_organic);
-
-        tvScore.setText("Очки: " + score);
-        tvLevel.setText("Уровень: " + level);
     }
 
     private void initTrashItems() {
@@ -83,12 +74,6 @@ public class SortingGameActivity extends AppCompatActivity {
         trashItems.add(new TrashItem("Яблоко", TrashItem.TrashType.ORGANIC, "🍎"));
         trashItems.add(new TrashItem("Банан", TrashItem.TrashType.ORGANIC, "🍌"));
         trashItems.add(new TrashItem("Листья", TrashItem.TrashType.ORGANIC, "🍂"));
-    }
-
-    private void startLevel() {
-        // Запоминаем очки в начале уровня
-        levelStartScore = score;
-        displayTrashItems();
     }
 
     private void displayTrashItems() {
@@ -151,12 +136,15 @@ public class SortingGameActivity extends AppCompatActivity {
                 case DragEvent.ACTION_DROP:
                     View draggedView = (View) event.getLocalState();
                     TrashItem item = (TrashItem) draggedView.getTag();
+
                     TrashItem.TrashType binType = (TrashItem.TrashType) v.getTag();
 
                     if (item.getType() == binType) {
-                        // Правильный ответ
+                        // Правильно
                         score += 10;
+                        correctSorts++;
                         tvScore.setText("Очки: " + score);
+
                         trashContainer.removeView(draggedView);
                         Toast.makeText(this, "✅ Правильно!", Toast.LENGTH_SHORT).show();
 
@@ -164,27 +152,12 @@ public class SortingGameActivity extends AppCompatActivity {
                             levelComplete();
                         }
                     } else {
-                        // Неправильный ответ
+                        // Неправильно
                         score = Math.max(0, score - 5);
                         tvScore.setText("Очки: " + score);
                         Toast.makeText(this, "❌ Неправильный контейнер! " +
                                         item.getName() + " → " + item.getType().getRussianName(),
                                 Toast.LENGTH_SHORT).show();
-
-                        // Проверяем, если очки = 0
-                        if (score == 0) {
-                            new AlertDialog.Builder(this)
-                                    .setTitle("Игра окончена")
-                                    .setMessage("Ваши очки закончились! Хотите повторить уровень?")
-                                    .setPositiveButton("Повторить", (dialog, which) -> {
-                                        score = levelStartScore; // восстанавливаем очки на уровне
-                                        tvScore.setText("Очки: " + score);
-                                        displayTrashItems();
-                                    })
-                                    .setNegativeButton("Выйти в меню", (dialog, which) -> finish())
-                                    .setCancelable(false)
-                                    .show();
-                        }
                     }
 
                     resetBinColor(v);
@@ -220,17 +193,14 @@ public class SortingGameActivity extends AppCompatActivity {
     }
 
     private void levelComplete() {
-        if (level < MAX_LEVEL) {
-            level++;
-            tvLevel.setText("Уровень: " + level);
-            startLevel();
-        } else {
-            new AlertDialog.Builder(this)
-                    .setTitle("🏆 Поздравляем!")
-                    .setMessage("Вы прошли все 8 уровней!")
-                    .setPositiveButton("Выйти в меню", (dialog, which) -> finish())
-                    .setCancelable(false)
-                    .show();
-        }
+        level++;
+        tvLevel.setText("Уровень: " + level);
+
+        new AlertDialog.Builder(this)
+                .setTitle("🎉 Уровень пройден!")
+                .setMessage("Отличная работа! Переходим на уровень " + level)
+                .setPositiveButton("Продолжить", (dialog, which) -> displayTrashItems())
+                .setCancelable(false)
+                .show();
     }
 }

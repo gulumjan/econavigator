@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.econavigator.R;
 import com.example.econavigator.firebase.FirebaseAuthManager;
 import com.example.econavigator.models.FirebaseStudent;
+import com.example.econavigator.utils.SharedPrefsManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private FirebaseAuthManager authManager;
+    private SharedPrefsManager prefsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +37,17 @@ public class LoginActivity extends AppCompatActivity {
 
         initViews();
         authManager = new FirebaseAuthManager(this);
+        prefsManager = new SharedPrefsManager(this);
 
         // Проверяем, авторизован ли уже пользователь
-        if (authManager.isUserLoggedIn()) {
-            goToMainActivity();
+        if (authManager.isUserLoggedIn() && prefsManager.isLoggedIn()) {
+            // Пользователь уже авторизован
+            String role = prefsManager.getRole();
+            if ("admin".equals(role)) {
+                goToAdminDashboard();
+            } else {
+                goToMainActivity();
+            }
         }
     }
 
@@ -90,8 +99,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(FirebaseStudent student) {
                 showLoading(false);
+
+                // ВАЖНО: Сохраняем данные студента локально
+                prefsManager.saveStudentData(
+                        0, // ID не используется для Firebase
+                        student.getName(),
+                        student.getClassName(),
+                        student.getPoints(),
+                        student.getLevel()
+                );
+
+                // Сохраняем Firebase UID, email и роль
+                prefsManager.saveFirebaseUid(student.getUid());
+                prefsManager.saveEmail(student.getEmail());
+                prefsManager.saveRole(student.getRole());
+
                 Toast.makeText(LoginActivity.this,
-                        "Добро пожаловать, " + student.getName() + "!",
+                        "Добро пожаловать, " + student.getName() + "! 🌱",
                         Toast.LENGTH_SHORT).show();
 
                 // Проверяем роль и переходим на соответствующий экран
@@ -108,14 +132,16 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Пользовательские сообщения об ошибках
                 String errorMessage;
-                if (error.contains("no user record")) {
-                    errorMessage = "Пользователь не найден";
-                } else if (error.contains("password is invalid")) {
-                    errorMessage = "Неверный пароль";
-                } else if (error.contains("network error")) {
-                    errorMessage = "Проверьте подключение к интернету";
+                if (error.contains("no user record") || error.contains("user not found")) {
+                    errorMessage = "❌ Пользователь не найден";
+                } else if (error.contains("password is invalid") || error.contains("wrong password")) {
+                    errorMessage = "❌ Неверный пароль";
+                } else if (error.contains("network error") || error.contains("network")) {
+                    errorMessage = "📡 Проверьте подключение к интернету";
+                } else if (error.contains("too many requests")) {
+                    errorMessage = "⏳ Слишком много попыток. Попробуйте позже";
                 } else {
-                    errorMessage = "Ошибка входа: " + error;
+                    errorMessage = "❌ Ошибка входа: " + error;
                 }
 
                 Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_LONG).show();
@@ -126,18 +152,25 @@ public class LoginActivity extends AppCompatActivity {
     private void showForgotPasswordDialog() {
         // Создаём диалог для ввода email
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Сброс пароля");
+        builder.setTitle("🔑 Сброс пароля");
         builder.setMessage("Введите ваш email:");
 
         final EditText input = new EditText(this);
         input.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        input.setHint("email@example.com");
+        input.setPadding(50, 30, 50, 30);
         builder.setView(input);
 
         builder.setPositiveButton("Отправить", (dialog, which) -> {
             String email = input.getText().toString().trim();
 
             if (TextUtils.isEmpty(email)) {
-                Toast.makeText(this, "Введите email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "❌ Введите email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "❌ Неверный формат email", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -148,16 +181,22 @@ public class LoginActivity extends AppCompatActivity {
                 public void onSuccess(FirebaseStudent student) {
                     showLoading(false);
                     Toast.makeText(LoginActivity.this,
-                            "Письмо для сброса пароля отправлено на " + email,
+                            "✅ Письмо для сброса пароля отправлено на " + email,
                             Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onError(String error) {
                     showLoading(false);
-                    Toast.makeText(LoginActivity.this,
-                            "Ошибка: " + error,
-                            Toast.LENGTH_LONG).show();
+
+                    String errorMessage;
+                    if (error.contains("no user record")) {
+                        errorMessage = "❌ Пользователь с таким email не найден";
+                    } else {
+                        errorMessage = "❌ Ошибка: " + error;
+                    }
+
+                    Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                 }
             });
         });
@@ -171,6 +210,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setEnabled(!show);
         etEmail.setEnabled(!show);
         etPassword.setEnabled(!show);
+        tvForgotPassword.setEnabled(!show);
     }
 
     private void goToMainActivity() {
@@ -185,5 +225,11 @@ public class LoginActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Cleanup если нужно
     }
 }
