@@ -6,14 +6,15 @@ import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.econavigator.R;
+import com.example.econavigator.firebase.FirebaseDataManager;
+import com.example.econavigator.models.GameResult;
+import com.example.econavigator.utils.SharedPrefsManager;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -33,10 +34,20 @@ public class SearchGameActivity extends AppCompatActivity {
     private String[] emojis = {"🌳", "🌲", "🌿", "🍃", "🌾", "🌱", "🌵", "🌴", "🌺", "🌸"};
     private String[] trashEmojis = {"🗑️", "🧃", "🥤", "🍔", "🍟", "🧴", "📦", "🛍️", "🥫", "🍾"};
 
+    // Firebase
+    private FirebaseDataManager dataManager;
+    private SharedPrefsManager prefsManager;
+    private String currentUid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_game);
+
+        // Initialize Firebase
+        dataManager = new FirebaseDataManager();
+        prefsManager = new SharedPrefsManager(this);
+        currentUid = prefsManager.getFirebaseUid();
 
         initViews();
         setupGame();
@@ -152,16 +163,21 @@ public class SearchGameActivity extends AppCompatActivity {
         if (timer != null) timer.cancel();
 
         int bonus = (int) (timeLeft / 1000) * 2;
-        score += bonus;
+        int totalScore = score + bonus;
+
+        // Save to Firebase
+        saveGameResultToFirebase(totalScore);
 
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Победа!")
-                .setMessage(String.format("Ты нашёл весь мусор!\n\nОчки: %d\nБонус за время: %d\nИтого: %d",
-                        score - bonus, bonus, score))
+                .setMessage(String.format("Ты нашёл весь мусор!\n\nОчки: %d\nБонус за время: %d\nИтого: %d\n\nБаллы добавлены в профиль!",
+                        score, bonus, totalScore))
                 .setPositiveButton("Играть снова", (dialog, which) -> resetGame())
                 .setNegativeButton("Выход", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+
+        score = totalScore;
     }
 
     private void gameOver() {
@@ -169,9 +185,13 @@ public class SearchGameActivity extends AppCompatActivity {
             gameGrid.getChildAt(i).setEnabled(false);
         }
 
+        // Save to Firebase even if not completed
+        saveGameResultToFirebase(score);
+
         new AlertDialog.Builder(this)
                 .setTitle("⏰ Время вышло!")
-                .setMessage(String.format("Найдено: %d/%d\nОчки: %d", foundItems, totalTrashItems, score))
+                .setMessage(String.format("Найдено: %d/%d\nОчки: %d\n\nБаллы добавлены в профиль!",
+                        foundItems, totalTrashItems, score))
                 .setPositiveButton("Попробовать снова", (dialog, which) -> resetGame())
                 .setNegativeButton("Выход", (dialog, which) -> finish())
                 .setCancelable(false)
@@ -189,6 +209,56 @@ public class SearchGameActivity extends AppCompatActivity {
 
         setupGame();
         startTimer();
+    }
+
+    private void saveGameResultToFirebase(int finalScore) {
+        if (currentUid == null || currentUid.isEmpty()) {
+            Toast.makeText(this, "Ошибка: пользователь не авторизован", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create game result
+        GameResult gameResult = new GameResult(
+                currentUid,
+                "search",
+                finalScore,
+                finalScore,
+                0
+        );
+
+        // Save game result
+        dataManager.saveGameResult(gameResult, new FirebaseDataManager.DataCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean data) {
+                // Update student points
+                dataManager.updateStudentPoints(currentUid, finalScore, new FirebaseDataManager.DataCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean success) {
+                        // Update local SharedPreferences
+                        int currentPoints = prefsManager.getStudentPoints();
+                        prefsManager.updatePoints(currentPoints + finalScore);
+
+                        Toast.makeText(SearchGameActivity.this,
+                                "✅ Баллы сохранены!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(SearchGameActivity.this,
+                                "Ошибка сохранения баллов: " + error,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(SearchGameActivity.this,
+                        "Ошибка сохранения результата: " + error,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

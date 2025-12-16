@@ -12,6 +12,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.econavigator.R;
 import com.example.econavigator.models.TrashItem;
+import com.example.econavigator.firebase.FirebaseDataManager;
+import com.example.econavigator.models.GameResult;
+import com.example.econavigator.utils.SharedPrefsManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,10 +30,20 @@ public class SortingGameActivity extends AppCompatActivity {
     private int level = 1;
     private int correctSorts = 0;
 
+    // Firebase
+    private FirebaseDataManager dataManager;
+    private SharedPrefsManager prefsManager;
+    private String currentUid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sorting_game);
+
+        // Initialize Firebase
+        dataManager = new FirebaseDataManager();
+        prefsManager = new SharedPrefsManager(this);
+        currentUid = prefsManager.getFirebaseUid();
 
         initViews();
         initTrashItems();
@@ -196,11 +209,69 @@ public class SortingGameActivity extends AppCompatActivity {
         level++;
         tvLevel.setText("Уровень: " + level);
 
+        // Save to Firebase after each level
+        saveGameResultToFirebase();
+
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Уровень пройден!")
-                .setMessage("Отличная работа! Переходим на уровень " + level)
+                .setMessage("Отличная работа! Переходим на уровень " + level + "\n\nБаллы добавлены в профиль!")
                 .setPositiveButton("Продолжить", (dialog, which) -> displayTrashItems())
+                .setNegativeButton("Выход", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void saveGameResultToFirebase() {
+        if (currentUid == null || currentUid.isEmpty()) {
+            Toast.makeText(this, "Ошибка: пользователь не авторизован", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create game result
+        GameResult gameResult = new GameResult(
+                currentUid,
+                "sorting",
+                score,
+                score,
+                level
+        );
+
+        // Save game result
+        dataManager.saveGameResult(gameResult, new FirebaseDataManager.DataCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean data) {
+                // Update student points
+                dataManager.updateStudentPoints(currentUid, score, new FirebaseDataManager.DataCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean success) {
+                        // Update local SharedPreferences
+                        int currentPoints = prefsManager.getStudentPoints();
+                        prefsManager.updatePoints(currentPoints + score);
+
+                        Toast.makeText(SortingGameActivity.this,
+                                "✅ Баллы сохранены!",
+                                Toast.LENGTH_SHORT).show();
+
+                        // Reset score for next level
+                        score = 0;
+                        tvScore.setText("Очки: " + score);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(SortingGameActivity.this,
+                                "Ошибка сохранения баллов: " + error,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(SortingGameActivity.this,
+                        "Ошибка сохранения результата: " + error,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
