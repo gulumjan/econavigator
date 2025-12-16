@@ -28,7 +28,11 @@ public class FirebaseAuthManager {
     public FirebaseAuthManager(Context context) {
         this.context = context;
         this.mAuth = FirebaseAuth.getInstance();
-        this.mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Configure Firebase Database with your database URL
+        String databaseUrl = "https://inst-81b86-default-rtdb.europe-west1.firebasedatabase.app/";
+        FirebaseDatabase database = FirebaseDatabase.getInstance(databaseUrl);
+        this.mDatabase = database.getReference();
     }
 
     /**
